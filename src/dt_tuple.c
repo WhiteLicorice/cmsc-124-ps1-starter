@@ -1,17 +1,15 @@
 /*
  * dt_tuple.c -- tuples (Unit 5, Section G).
  *
- * A tuple is a record whose fields are numbered instead of named. That sounds
- * like a small change and it costs exactly one thing: meaning. `person.age`
- * says what it holds and `person[1]` does not, which is why tuples suit small
- * temporary groupings, a function returning two things, and little else.
+ * A tuple is a record with numbered parts. Numbering costs you meaning.
+ * person.age says what it holds and person[1] does not. So tuples suit small
+ * temporary groupings, such as a function returning two values.
  *
- * What they buy back is that they need no declaration. You build one from its
- * parts and read it by position, so the type exists only as long as the
- * expression that made it.
+ * What you get back is that a tuple needs no declaration. You build it from
+ * its parts and read it by position.
  *
- * Arity is fixed at construction. There is no dt_tuple_set here, and that
- * absence is the design, not an oversight.
+ * There is no dt_tuple_set. The arity and the contents are fixed when the tuple
+ * is built. That is deliberate.
  */
 
 #include "dt.h"
@@ -25,8 +23,8 @@ struct dt_tuple {
 
 dt_tuple *dt_tuple_new(const dt_value *values, size_t count)
 {
-    /* TODO: NULL when count exceeds DT_TUPLE_MAX_ARITY, otherwise copy the
-       values in. A count of 0 is the empty tuple and is legal. */
+    /* TODO: return NULL when count is over DT_TUPLE_MAX_ARITY, and copy the
+       values otherwise. A count of 0 is the empty tuple and is legal. */
     (void)values;
     (void)count;
     return NULL;

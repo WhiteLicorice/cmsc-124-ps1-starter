@@ -1,8 +1,9 @@
 /*
- * main.c -- entry point. Given to you, complete.
+ * main.c -- entry point. Written for you, complete.
  *
- * Exit codes follow the course run contract, the same one your interpreter
- * uses in the laboratory: 0 ran, 65 rejected before running, 70 died running.
+ * The exit codes follow the course run contract, the same one your interpreter
+ * uses in the laboratory. 0 means it ran, 65 means the file was rejected before
+ * anything ran, and 70 means it failed while running.
  */
 
 #include "driver.h"

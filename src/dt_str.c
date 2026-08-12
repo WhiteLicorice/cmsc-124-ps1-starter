@@ -1,17 +1,16 @@
 /*
- * dt_str.c -- length-carrying strings (Unit 5, Section B).
+ * dt_str.c -- strings that carry their length (Unit 5, Section B).
  *
- * C's own string is a pointer to bytes that ends at the first zero. That design
- * makes strlen cost a walk, makes a string with a zero byte in the middle
- * unrepresentable, and makes appending a question about capacity that the
- * representation itself cannot answer, because a terminator does not know how
- * much room follows it.
+ * A C string is a pointer to bytes that ends at the first zero byte. Finding the
+ * length therefore means walking the whole string, a string cannot contain a
+ * zero byte, and the string does not know how much memory it has, so appending
+ * safely needs information it does not store.
  *
- * This one stores length and capacity beside the bytes. dt_str_len is a field
- * read. A zero byte is an ordinary byte. Appending knows when to grow.
+ * Yours keeps the length and the capacity next to the bytes. dt_str_len reads
+ * a field. A zero byte is an ordinary byte. Appending knows when to grow.
  *
- * Keep one byte of slack and write a terminator anyway if you like; the printer
- * never relies on it, but a debugger session is friendlier when it is there.
+ * You may write a terminating zero after the last byte if you like. The
+ * printer never depends on it, but it makes debugging easier.
  */
 
 #include "dt.h"
@@ -27,9 +26,9 @@ struct dt_str {
 
 dt_str *dt_str_new(const char *bytes, size_t length)
 {
-    /* TODO: allocate the handle and a buffer, copy `length` bytes in with
-       memcpy rather than strcpy, and record the length. Return NULL if an
-       allocation fails. */
+    /* TODO: allocate the handle and a buffer, copy `length` bytes with memcpy
+       rather than strcpy, and store the length. Return NULL if an allocation
+       fails. */
     (void)bytes;
     (void)length;
     return NULL;
@@ -37,28 +36,29 @@ dt_str *dt_str_new(const char *bytes, size_t length)
 
 void dt_str_free(dt_str *s)
 {
-    /* TODO: free the buffer, then the handle. Tolerate NULL. */
+    /* TODO: free the buffer, then the handle. Accept NULL without crashing. */
     (void)s;
 }
 
 size_t dt_str_len(const dt_str *s)
 {
-    /* TODO: one field read, no walking. */
+    /* TODO: read the field. Do not walk the bytes. */
     (void)s;
     return 0;
 }
 
 const char *dt_str_bytes(const dt_str *s)
 {
-    /* TODO: return the buffer. The caller pairs it with dt_str_len. */
+    /* TODO: return the buffer. The caller uses it together with dt_str_len. */
     (void)s;
     return "";
 }
 
 dt_status dt_str_append(dt_str *s, const char *bytes, size_t length)
 {
-    /* TODO: grow the buffer when length would not fit, then copy. Doubling the
-       capacity keeps a sequence of appends from being quadratic. */
+    /* TODO: grow the buffer when the new bytes do not fit, then copy them.
+       Double the capacity each time. Growing by just enough makes a series of
+       appends slow because every append copies the whole string again. */
     (void)s;
     (void)bytes;
     (void)length;
@@ -67,9 +67,9 @@ dt_status dt_str_append(dt_str *s, const char *bytes, size_t length)
 
 dt_status dt_str_substr(const dt_str *s, size_t start, size_t length, dt_str **out)
 {
-    /* TODO: DT_ERR_RANGE when start + length runs past the end. Watch that
-       sum: two size_t values can wrap, so compare start against the length
-       first and then length against what remains. */
+    /* TODO: return DT_ERR_RANGE when the piece runs past the end. Careful with
+       that test. Two size_t values can wrap around, so compare start against
+       the length first, then length against what is left. */
     (void)s;
     (void)start;
     (void)length;
@@ -79,8 +79,8 @@ dt_status dt_str_substr(const dt_str *s, size_t start, size_t length, dt_str **o
 
 bool dt_str_eq(const dt_str *a, const dt_str *b)
 {
-    /* TODO: lengths first, then memcmp. strcmp would stop at an interior zero
-       byte and call two different strings equal. */
+    /* TODO: compare the lengths first, then use memcmp. strcmp would stop at a
+       zero byte in the middle and call two different strings equal. */
     (void)a;
     (void)b;
     return false;

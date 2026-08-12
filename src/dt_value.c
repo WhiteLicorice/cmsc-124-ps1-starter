@@ -1,19 +1,20 @@
 /*
  * dt_value.c -- the discriminated union (Unit 5, Section I).
  *
- * The constructors below are given. They are boilerplate and there is nothing
- * to learn from retyping them.
+ * The constructors below are written for you. They are boilerplate and there
+ * is nothing to learn from retyping them.
  *
- * The three checked readers at the bottom are yours. Each one confirms the tag
- * before it reads the payload. That confirmation is the entire difference
- * between a free union, which will happily reinterpret the bits of a pointer as
- * an integer, and a discriminated union, which will not.
+ * The three readers at the bottom are yours. Each one checks the tag before it
+ * reads the payload. That check is the difference between a free union, which
+ * will happily read the bits of a pointer as an integer, and a discriminated
+ * union, which will not.
  *
  * They refuse every read until you write them, so every `as` command in the
- * public corpus fails with exit 70. Resist the shortcut of returning the
- * payload unconditionally: `as str 42` would then hand the printer an integer
- * wearing a pointer's clothes, and what happens next is undefined behavior
- * rather than a wrong answer.
+ * corpus fails with exit 70.
+ *
+ * Do not take the shortcut of returning the payload without checking. Then
+ * `as str 42` hands the printer an integer where a pointer belongs, and the
+ * program has undefined behavior rather than a wrong answer.
  */
 
 #include "dt.h"
@@ -82,8 +83,8 @@ dt_value dt_value_ref(dt_ref *p)
 
 dt_status dt_value_as_int(dt_value v, long long *out)
 {
-    /* TODO: on DT_INT, write v.as.integer to *out and return DT_OK.
-       On anything else, return DT_ERR_TAG and leave *out alone. */
+    /* TODO: if v.tag is DT_INT, write v.as.integer to *out and return DT_OK.
+       Otherwise return DT_ERR_TAG and leave *out alone. */
     (void)v;
     (void)out;
     return DT_ERR_TAG;
@@ -91,7 +92,7 @@ dt_status dt_value_as_int(dt_value v, long long *out)
 
 dt_status dt_value_as_enum(dt_value v, int *out)
 {
-    /* TODO: the same shape, for DT_ENUM and v.as.ordinal. */
+    /* TODO: same idea, for DT_ENUM and v.as.ordinal. */
     (void)v;
     (void)out;
     return DT_ERR_TAG;
@@ -99,7 +100,7 @@ dt_status dt_value_as_enum(dt_value v, int *out)
 
 dt_status dt_value_as_str(dt_value v, dt_str **out)
 {
-    /* TODO: the same shape, for DT_STR and v.as.string. */
+    /* TODO: same idea, for DT_STR and v.as.string. */
     (void)v;
     (void)out;
     return DT_ERR_TAG;

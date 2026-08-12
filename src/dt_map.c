@@ -1,24 +1,24 @@
 /*
  * dt_map.c -- associative arrays (Unit 5, Section E).
  *
- * The difference from an array is one sentence: an array does not store its
- * indices, and this does store its keys. That is why an array position costs
- * one subtraction and a key costs a hash plus a comparison.
+ * The difference from an array is one sentence. An array does not store its
+ * indices. This stores its keys. That is why an array position costs one
+ * subtraction and a key costs a hash plus at least one comparison.
  *
- * Two requirements shape the implementation.
+ * Two requirements drive the code.
  *
- * Hashing. Turn a key into a bucket, then compare keys inside that bucket,
- * because two keys can land in the same one. Chaining each bucket as a linked
- * list is the shortest correct answer. FNV-1a is four lines and good enough:
- * start at 14695981039346656037u, and for each byte, xor it in and multiply by
- * 1099511628211u.
+ * Hashing. Turn the key into a bucket number, then compare keys inside that
+ * bucket, because two keys can land in the same bucket. Making each bucket a
+ * linked list is the shortest correct answer. FNV-1a is four lines. Start the
+ * accumulator at 14695981039346656037, then for each byte, exclusive-or the
+ * byte into it and multiply by 1099511628211.
  *
- * Insertion order. Printing a map has to be deterministic or nobody can write
- * an expected-output file, and bucket order is an artifact of the hash. So keep
- * a separate list of keys in the order they were first inserted, which is what
- * dt_map_key_at reads. Putting an existing key again replaces its value and
- * leaves its position alone; removing a key takes it out of that order, and
- * putting it back later appends it at the end.
+ * Insertion order. Printing a map has to be repeatable, or nobody can write an
+ * expected-output file. Bucket order depends on the hash function, so keep a
+ * separate list of keys in the order they were first added. dt_map_key_at
+ * reads that list. Adding an existing key replaces its value and keeps its
+ * position. Removing a key takes it out of the list, and adding it again puts
+ * it at the end.
  */
 
 #include "dt.h"
@@ -32,14 +32,14 @@ struct dt_map {
 
 dt_map *dt_map_new(void)
 {
-    /* TODO: an empty map. Not NULL, which means allocation failure. */
+    /* TODO: an empty map. Not NULL, which means the allocation failed. */
     return NULL;
 }
 
 void dt_map_free(dt_map *m)
 {
-    /* TODO: free every chain node, every copied key, and the map. The values
-       belong to the environment; leave them alone. */
+    /* TODO: free every list node, every copied key, and the map itself. The
+       values belong to the environment, so leave them alone. */
     (void)m;
 }
 
@@ -51,8 +51,9 @@ size_t dt_map_len(const dt_map *m)
 
 dt_status dt_map_put(dt_map *m, const char *key, dt_value v)
 {
-    /* TODO: replace on an existing key, insert otherwise. Copy the key; the
-       caller's buffer does not outlive the command. */
+    /* TODO: replace the value when the key is already there, and add it
+       otherwise. Copy the key. The caller's buffer does not last past the
+       command. */
     (void)m;
     (void)key;
     (void)v;
@@ -61,7 +62,8 @@ dt_status dt_map_put(dt_map *m, const char *key, dt_value v)
 
 dt_status dt_map_get(const dt_map *m, const char *key, dt_value *out)
 {
-    /* TODO: DT_ERR_KEY when absent. A missing key is not nil. */
+    /* TODO: return DT_ERR_KEY when the key is absent. A missing key is not
+       nil. */
     (void)m;
     (void)key;
     (void)out;
@@ -70,8 +72,8 @@ dt_status dt_map_get(const dt_map *m, const char *key, dt_value *out)
 
 dt_status dt_map_remove(dt_map *m, const char *key)
 {
-    /* TODO: unlink from the bucket chain and from the insertion order, free
-       the copied key, and report DT_ERR_KEY when it was not there. */
+    /* TODO: unlink the entry from its bucket and from the insertion order,
+       free the copied key, and return DT_ERR_KEY when it was not there. */
     (void)m;
     (void)key;
     return DT_ERR_KEY;
@@ -79,7 +81,8 @@ dt_status dt_map_remove(dt_map *m, const char *key)
 
 dt_status dt_map_key_at(const dt_map *m, size_t index, const char **out)
 {
-    /* TODO: the index-th key in insertion order, DT_ERR_RANGE past the end. */
+    /* TODO: the key at this position in insertion order, or DT_ERR_RANGE past
+       the end. */
     (void)m;
     (void)index;
     (void)out;

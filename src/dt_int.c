@@ -1,24 +1,25 @@
 /*
  * dt_int.c -- checked integers (Unit 5, Section A).
  *
- * Signed overflow in C is undefined behavior, not wraparound. That word matters
- * more than it looks: the compiler is entitled to assume it never happens, so
- * `if (a + b < a)` as an overflow test can be deleted outright by the optimizer,
- * because the only way it could be true is a path the standard says cannot
- * exist. Compute the answer first and inspect it afterward and you have already
- * lost.
+ * In C, signed integer overflow is undefined behavior. The standard says
+ * nothing about what the program does, so the compiler may assume overflow
+ * never happens. A check written after the arithmetic can be deleted by the
+ * optimizer for that reason:
  *
- * So the check has to come before the arithmetic, phrased in operands that are
- * definitely in range. For addition: if b is positive, overflow means
- * a > LLONG_MAX - b. If b is negative, underflow means a < LLONG_MIN - b.
- * Both right-hand sides are computable without overflowing.
+ *     long long sum = a + b;
+ *     if (sum < a) return DT_ERR_OVERFLOW;   // may be removed
  *
- * Multiplication has more cases, including the one that catches people:
- * LLONG_MIN / -1 is itself an overflow, so a division-based check needs that
- * pair handled separately.
+ * So check first, using values that cannot overflow by themselves. For
+ * addition, if b is positive, the sum is too large when a > LLONG_MAX - b. If
+ * b is negative, the sum is too small when a < LLONG_MIN - b. Both of those
+ * subtractions are safe.
  *
- * These stubs compute nothing and report overflow for everything, so the
- * normal/ cases fail until you write them.
+ * Multiplication has more cases. Watch LLONG_MIN with -1. That product
+ * overflows, and so does the division LLONG_MIN / -1 that a division-based
+ * check would compute.
+ *
+ * These stubs report overflow for every input, so the normal/ cases fail until
+ * you write them.
  */
 
 #include "dt.h"
@@ -27,7 +28,7 @@
 
 dt_status dt_int_add(long long a, long long b, long long *out)
 {
-    /* TODO: detect overflow before adding, then write the sum to *out. */
+    /* TODO: check for overflow, then write the sum to *out. */
     (void)a;
     (void)b;
     (void)out;
@@ -37,7 +38,8 @@ dt_status dt_int_add(long long a, long long b, long long *out)
 dt_status dt_int_sub(long long a, long long b, long long *out)
 {
     /* TODO: subtraction is not addition of a negation. -LLONG_MIN does not
-       exist, so `dt_int_add(a, -b, out)` is wrong for b == LLONG_MIN. */
+       exist, so dt_int_add(a, -b, out) gives the wrong answer when b is
+       LLONG_MIN. */
     (void)a;
     (void)b;
     (void)out;
@@ -46,8 +48,7 @@ dt_status dt_int_sub(long long a, long long b, long long *out)
 
 dt_status dt_int_mul(long long a, long long b, long long *out)
 {
-    /* TODO: handle zero first, then the LLONG_MIN with -1 pair, then the
-       general case. */
+    /* TODO: handle zero first, then LLONG_MIN with -1, then the rest. */
     (void)a;
     (void)b;
     (void)out;
