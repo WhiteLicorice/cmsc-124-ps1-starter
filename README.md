@@ -60,11 +60,13 @@ Every row below is a run that happened.
 | MSYS2 UCRT64 (Windows 11) | GCC 16.2.0, CMake 4.4.2, Ninja 1.13.2, Python 3.14.7 | builds warning-free; 60/60 with a complete implementation; sanitizers skipped, see below |
 | Ubuntu 24.04 under WSL 2 | GCC 13.3.0, Python 3.12.3 | 60/60 with a complete implementation, including under AddressSanitizer and UndefinedBehaviorSanitizer |
 | GitHub Actions, `ubuntu-latest` | the workflow in `.github/workflows/test.yml` | builds, fetches the harness, runs the corpus, and runs it again sanitized; 30/60 on the stubs, matching both machines above |
+| GitHub Actions, `macos-latest` | the same workflow, Apple Clang | the same four stages and the same 30/60 |
 
 The Ubuntu figure comes from compiling `src/*.c` directly with `gcc`, because
-that machine had no CMake installed. The CMake path runs on Windows and in
-Actions. macOS was never run here. Its setup steps come from the Laboratory
-Activity 0 manual, where they are the same commands.
+that machine had no CMake installed. Everywhere else went through CMake. The
+60/60 figures are from the instructor's own implementation on the two local
+machines, so what the two Actions runners prove is the scaffold: the build, the
+harness fetch, the corpus, and the sanitizers.
 
 ## The Sanitizer Leg
 
@@ -76,9 +78,13 @@ MinGW GCC ships neither `libasan` nor `libubsan`, so on MSYS2 the link fails
 with `cannot find -lasan` and the leg is skipped by name. This is a property of
 the toolchain, confirmed on UCRT64 GCC 16.2.0 and on mingw32 GCC 16.1.0, and
 not something your code can change. It does run in the GitHub Actions workflow,
-confirmed on `ubuntu-latest`. That workflow is where the graded verdict comes
-from, so push your work and read the Actions tab if you want the sanitized
-answer on Windows.
+confirmed on both `ubuntu-latest` and `macos-latest`. That workflow is where the
+graded verdict comes from, so push your work and read the Actions tab if you
+want the sanitized answer on Windows.
+
+Apple's AddressSanitizer has no leak checker, so `check.sh` leaves leak
+detection at whatever the platform defaults to. Linux turns it on by itself,
+which is where the leak half of the grade is decided.
 
 The leg earns its place. Writing this starter, AddressSanitizer caught a leak
 in `driver.c` that all 60 correctness checks passed straight through: a
