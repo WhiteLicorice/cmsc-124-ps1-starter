@@ -3,12 +3,26 @@ on: [push]
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v7
-      - run: sudo apt-get update && sudo apt-get install -y cmake ninja-build
+
+      - name: Install build tools (Linux)
+        if: runner.os == 'Linux'
+        run: sudo apt-get update && sudo apt-get install -y cmake ninja-build
+
+      - name: Install build tools (macOS)
+        if: runner.os == 'macOS'
+        run: brew install ninja
+
       - run: chmod +x build.sh run check.sh
+
       # check.sh is the whole grade. It builds, runs the published corpus, and
       # runs it again under AddressSanitizer and UndefinedBehaviorSanitizer,
-      # which do link here even though they do not on MSYS2.
+      # which do link on both of these runners even though they do not on
+      # MSYS2.
       - run: ./check.sh
