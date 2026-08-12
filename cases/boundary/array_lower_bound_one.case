@@ -1,0 +1,7 @@
+# Indices run 1 to 3. The index is not the offset.
+arr new a 3 1
+arr set a 1 "first"
+arr set a 3 "third"
+arr get a 1
+arr get a 3
+print @a

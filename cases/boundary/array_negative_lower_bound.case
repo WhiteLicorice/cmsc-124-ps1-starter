@@ -1,0 +1,6 @@
+arr new a 3 -1
+arr set a -1 10
+arr set a 0 20
+arr set a 1 30
+arr get a -1
+print @a

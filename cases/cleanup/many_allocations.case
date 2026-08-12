@@ -1,0 +1,25 @@
+# Nothing here checks a value. It exists so that the sanitized run has a broad
+# allocation pattern to walk over on the way out.
+str new s1 "one"
+str new s2 "two"
+str new s3 "three"
+str append s1 " more"
+str substr s3 0 2 piece
+arr new a 5 0
+arr set a 0 @s1
+arr set a 1 @s2
+arr set a 2 @s3
+arr set a 3 @piece
+map new m
+map put m "a" @a
+map put m "s" @s2
+map del m "s"
+rec new r x y z
+rec set r x @a
+tup new t @s1 @s2 @s3
+list nil e
+list cons l1 @t e
+list cons l2 @r l1
+arr set a 4 @l2
+map len m
+list len l2

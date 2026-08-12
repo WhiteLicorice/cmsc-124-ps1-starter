@@ -1,0 +1,2 @@
+str new s "hello"
+str substr s 3 5 tail

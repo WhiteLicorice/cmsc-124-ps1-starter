@@ -1,0 +1,13 @@
+arr new a 1 0
+map new m
+rec new r f
+tup new t 1
+list nil e
+ref new p 1
+tag @a
+tag @m
+tag @r
+tag @t
+tag @e
+tag @p
+ref release p

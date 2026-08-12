@@ -1,0 +1,7 @@
+str new s "shared"
+ref new p @s
+ref new q @s
+ref release p
+ref borrow q
+ref release q
+print @s

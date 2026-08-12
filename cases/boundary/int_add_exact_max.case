@@ -1,0 +1,2 @@
+# 9223372036854775806 + 1 is the largest long long. It fits.
+int add 9223372036854775806 1

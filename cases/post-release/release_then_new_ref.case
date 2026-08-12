@@ -1,0 +1,5 @@
+ref new p 1
+ref release p
+ref new q 2
+ref borrow q
+ref release q

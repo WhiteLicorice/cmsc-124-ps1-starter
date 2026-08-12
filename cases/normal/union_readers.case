@@ -1,0 +1,7 @@
+as int 42
+as str "text"
+as enum enum:BLUE
+tag 1
+tag "s"
+tag nil
+tag enum:RED

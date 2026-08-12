@@ -1,0 +1,13 @@
+map new m
+map put m "alpha" 1
+map put m "beta" 2
+map put m "gamma" 3
+map len m
+map get m "beta"
+map put m "beta" 22
+map get m "beta"
+map len m
+print @m
+map del m "alpha"
+map len m
+print @m

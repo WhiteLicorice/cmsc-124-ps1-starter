@@ -1,0 +1,9 @@
+str new greeting "hello"
+str append greeting ", world"
+str len greeting
+print @greeting
+str substr greeting 7 5 place
+print @place
+str new other "world"
+str eq place other
+str eq greeting other

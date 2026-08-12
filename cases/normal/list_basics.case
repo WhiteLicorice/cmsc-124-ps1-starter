@@ -1,0 +1,12 @@
+list nil e
+list cons c 3 e
+list cons b 2 c
+list cons a 1 b
+list len a
+list car a
+print @a
+list cdr a rest
+print @rest
+list len rest
+print @e
+list len e

@@ -1,0 +1,6 @@
+enum of RED
+enum of GREEN
+enum of BLUE
+enum name 0
+enum name 2
+print enum:GREEN

@@ -1,0 +1,4 @@
+# The pointee is still allocated and nothing can reach it. A lost heap
+# variable, reported at exit.
+ref new p 42
+ref borrow p

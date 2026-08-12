@@ -1,0 +1,5 @@
+# Build output and the fetched harness. Nothing here belongs in a commit.
+build/
+build-san/
+run_tests.py
+__pycache__/

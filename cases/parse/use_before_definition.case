@@ -1,0 +1,4 @@
+# Forward reference. The name exists later in the file, which is not the same
+# as existing here.
+print @later
+str new later "too late"

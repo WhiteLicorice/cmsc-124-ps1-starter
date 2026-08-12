@@ -1,0 +1,3 @@
+map new m
+map put m "alpha" 1
+map get m "beta"

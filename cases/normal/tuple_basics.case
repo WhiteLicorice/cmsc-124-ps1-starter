@@ -1,0 +1,8 @@
+tup new pair 1 "two"
+tup arity pair
+tup at pair 0
+tup at pair 1
+print @pair
+tup new empty
+tup arity empty
+print @empty

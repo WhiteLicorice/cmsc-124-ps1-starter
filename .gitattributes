@@ -1,0 +1,10 @@
+# The shell scripts run under bash on every platform, so they stay LF.
+build.sh text eol=lf
+run text eol=lf
+check.sh text eol=lf
+
+# The harness compares stdout byte for byte. A CRLF checkout on Windows would
+# make every expectation disagree with a program that writes LF.
+*.case text eol=lf
+*.expected text eol=lf
+*.exit text eol=lf

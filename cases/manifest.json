@@ -1,0 +1,5 @@
+{
+  "ext": ".case",
+  "mode": "sidecar",
+  "run_entrypoint": "./run"
+}

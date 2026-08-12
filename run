@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+# run -- the entry point the harness calls. One case file per invocation.
+#
+# DT_BUILD_DIR lets check.sh point this at the sanitized build without
+# rebuilding the normal one. It defaults to ./build, which is what you want.
+binary="${DT_BUILD_DIR:-./build}/cmsc-124-ps1"
+if [[ -f "$binary.exe" ]]; then
+  binary="$binary.exe"
+fi
+exec "$binary" "$@"

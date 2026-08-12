@@ -1,0 +1,5 @@
+str new s "hello"
+str substr s 3 2 tail
+print @tail
+str substr s 5 0 nothing
+print @nothing

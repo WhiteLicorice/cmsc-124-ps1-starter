@@ -1,0 +1,6 @@
+# Ordinary arithmetic, nowhere near the edges.
+int add 2 3
+int sub 10 4
+int mul 6 7
+int add -5 5
+int mul -3 4

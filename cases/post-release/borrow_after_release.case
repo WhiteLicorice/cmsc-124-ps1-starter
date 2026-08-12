@@ -1,0 +1,5 @@
+# The dangling read. The address is still in the handle and the memory is not
+# ours any more.
+ref new p 42
+ref release p
+ref borrow p

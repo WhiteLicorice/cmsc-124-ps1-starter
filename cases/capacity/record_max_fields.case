@@ -1,0 +1,3 @@
+rec new r a b c d e f g h
+rec set r h 8
+rec get r h

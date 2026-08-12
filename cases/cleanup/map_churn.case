@@ -1,0 +1,10 @@
+map new m
+map put m "a" 1
+map put m "b" 2
+map put m "c" 3
+map del m "b"
+map put m "b" 22
+map del m "a"
+map put m "d" 4
+print @m
+map len m

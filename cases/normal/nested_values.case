@@ -1,0 +1,14 @@
+# Every container holds dt_value, so they nest without any extra work.
+list nil e
+list cons inner 9 e
+rec new point x y
+rec set point x 1
+rec set point y 2
+tup new pair enum:RED "tag"
+arr new a 3 0
+arr set a 0 @point
+arr set a 1 @pair
+arr set a 2 @inner
+map new m
+map put m "everything" @a
+print @m

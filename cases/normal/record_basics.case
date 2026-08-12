@@ -1,0 +1,6 @@
+rec new person name age
+rec set person name "ada"
+rec set person age 36
+rec get person name
+rec get person age
+print @person
