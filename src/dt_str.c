@@ -24,6 +24,11 @@ struct dt_str {
     size_t capacity;
 };
 
+/*
+ * dt_str_new: build a string that holds a copy of the first `length` bytes of
+ * `bytes`. A zero byte in the middle is a normal byte. Returns NULL when an
+ * allocation fails.
+ */
 dt_str *dt_str_new(const char *bytes, size_t length)
 {
     /* TODO: allocate the handle and a buffer, copy `length` bytes with memcpy
@@ -34,12 +39,20 @@ dt_str *dt_str_new(const char *bytes, size_t length)
     return NULL;
 }
 
+/*
+ * dt_str_free: release the buffer and the handle. Accepts NULL and does
+ * nothing then.
+ */
 void dt_str_free(dt_str *s)
 {
     /* TODO: free the buffer, then the handle. Accept NULL without crashing. */
     (void)s;
 }
 
+/*
+ * dt_str_len: how many bytes the string holds. This reads a field, so it takes
+ * the same time no matter how long the string is.
+ */
 size_t dt_str_len(const dt_str *s)
 {
     /* TODO: read the field. Do not walk the bytes. */
@@ -47,6 +60,10 @@ size_t dt_str_len(const dt_str *s)
     return 0;
 }
 
+/*
+ * dt_str_bytes: the string's bytes. There is no terminating zero, so pair this
+ * with dt_str_len rather than treating it as a C string.
+ */
 const char *dt_str_bytes(const dt_str *s)
 {
     /* TODO: return the buffer. The caller uses it together with dt_str_len. */
@@ -54,6 +71,11 @@ const char *dt_str_bytes(const dt_str *s)
     return "";
 }
 
+/*
+ * dt_str_append: add `length` bytes to the end of the string, growing the
+ * buffer when they do not fit. Returns DT_ERR_CAPACITY when an allocation
+ * fails. The string keeps its earlier bytes.
+ */
 dt_status dt_str_append(dt_str *s, const char *bytes, size_t length)
 {
     /* TODO: grow the buffer when the new bytes do not fit, then copy them.
@@ -65,6 +87,11 @@ dt_status dt_str_append(dt_str *s, const char *bytes, size_t length)
     return DT_ERR_CAPACITY;
 }
 
+/*
+ * dt_str_substr: build a new string from `length` bytes starting at `start`.
+ * Returns DT_ERR_RANGE when the piece runs past the end, and DT_ERR_CAPACITY
+ * when an allocation fails. The original string is not changed.
+ */
 dt_status dt_str_substr(const dt_str *s, size_t start, size_t length, dt_str **out)
 {
     /* TODO: return DT_ERR_RANGE when the piece runs past the end. Careful with
@@ -77,6 +104,11 @@ dt_status dt_str_substr(const dt_str *s, size_t start, size_t length, dt_str **o
     return DT_ERR_RANGE;
 }
 
+/*
+ * dt_str_eq: true when both strings hold the same bytes. The comparison uses
+ * the stored lengths, so a zero byte in the middle is compared like any other
+ * byte instead of ending the comparison early.
+ */
 bool dt_str_eq(const dt_str *a, const dt_str *b)
 {
     /* TODO: compare the lengths first, then use memcmp. strcmp would stop at a

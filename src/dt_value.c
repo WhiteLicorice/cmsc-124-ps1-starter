@@ -19,60 +19,70 @@
 
 #include "dt.h"
 
+/* dt_value_nil: the empty value, tagged DT_NIL. Given, complete. */
 dt_value dt_value_nil(void)
 {
     dt_value v = { .tag = DT_NIL, .as = { .integer = 0 } };
     return v;
 }
 
+/* dt_value_int: an integer value, tagged DT_INT. Given, complete. */
 dt_value dt_value_int(long long n)
 {
     dt_value v = { .tag = DT_INT, .as = { .integer = n } };
     return v;
 }
 
+/* dt_value_enum: an enumeration value, tagged DT_ENUM. Given, complete. */
 dt_value dt_value_enum(int ordinal)
 {
     dt_value v = { .tag = DT_ENUM, .as = { .ordinal = ordinal } };
     return v;
 }
 
+/* dt_value_str: a string value, tagged DT_STR. Given, complete. */
 dt_value dt_value_str(dt_str *s)
 {
     dt_value v = { .tag = DT_STR, .as = { .string = s } };
     return v;
 }
 
+/* dt_value_array: an array value, tagged DT_ARRAY. Given, complete. */
 dt_value dt_value_array(dt_array *a)
 {
     dt_value v = { .tag = DT_ARRAY, .as = { .array = a } };
     return v;
 }
 
+/* dt_value_map: an associative array value, tagged DT_MAP. Given, complete. */
 dt_value dt_value_map(dt_map *m)
 {
     dt_value v = { .tag = DT_MAP, .as = { .map = m } };
     return v;
 }
 
+/* dt_value_record: a record value, tagged DT_RECORD. Given, complete. */
 dt_value dt_value_record(dt_record *r)
 {
     dt_value v = { .tag = DT_RECORD, .as = { .record = r } };
     return v;
 }
 
+/* dt_value_tuple: a tuple value, tagged DT_TUPLE. Given, complete. */
 dt_value dt_value_tuple(dt_tuple *t)
 {
     dt_value v = { .tag = DT_TUPLE, .as = { .tuple = t } };
     return v;
 }
 
+/* dt_value_list: a list value, tagged DT_LIST. Given, complete. */
 dt_value dt_value_list(dt_list *l)
 {
     dt_value v = { .tag = DT_LIST, .as = { .list = l } };
     return v;
 }
 
+/* dt_value_ref: a reference value, tagged DT_REF. Given, complete. */
 dt_value dt_value_ref(dt_ref *p)
 {
     dt_value v = { .tag = DT_REF, .as = { .ref = p } };
@@ -81,6 +91,11 @@ dt_value dt_value_ref(dt_ref *p)
 
 /* ------------------------------------------------------------ your work */
 
+/*
+ * dt_value_as_int: when v holds an integer, write it to *out and return DT_OK.
+ * Otherwise return DT_ERR_TAG and leave *out alone. This is the tag check the
+ * union exists for.
+ */
 dt_status dt_value_as_int(dt_value v, long long *out)
 {
     /* TODO: if v.tag is DT_INT, write v.as.integer to *out and return DT_OK.
@@ -90,6 +105,10 @@ dt_status dt_value_as_int(dt_value v, long long *out)
     return DT_ERR_TAG;
 }
 
+/*
+ * dt_value_as_enum: same idea as dt_value_as_int, for an enumeration and its
+ * ordinal.
+ */
 dt_status dt_value_as_enum(dt_value v, int *out)
 {
     /* TODO: same idea, for DT_ENUM and v.as.ordinal. */
@@ -98,6 +117,9 @@ dt_status dt_value_as_enum(dt_value v, int *out)
     return DT_ERR_TAG;
 }
 
+/*
+ * dt_value_as_str: same idea as dt_value_as_int, for a string and its pointer.
+ */
 dt_status dt_value_as_str(dt_value v, dt_str **out)
 {
     /* TODO: same idea, for DT_STR and v.as.string. */

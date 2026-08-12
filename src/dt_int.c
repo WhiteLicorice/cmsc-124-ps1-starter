@@ -26,6 +26,10 @@
 
 #include <limits.h>
 
+/*
+ * dt_int_add: compute a + b, and return DT_ERR_OVERFLOW when the sum would
+ * leave the range of long long. *out is not written on overflow.
+ */
 dt_status dt_int_add(long long a, long long b, long long *out)
 {
     /* TODO: check for overflow, then write the sum to *out. */
@@ -35,6 +39,10 @@ dt_status dt_int_add(long long a, long long b, long long *out)
     return DT_ERR_OVERFLOW;
 }
 
+/*
+ * dt_int_sub: compute a - b, and return DT_ERR_OVERFLOW when the difference
+ * would leave the range of long long. *out is not written on overflow.
+ */
 dt_status dt_int_sub(long long a, long long b, long long *out)
 {
     /* TODO: subtraction is not addition of a negation. -LLONG_MIN does not
@@ -46,6 +54,10 @@ dt_status dt_int_sub(long long a, long long b, long long *out)
     return DT_ERR_OVERFLOW;
 }
 
+/*
+ * dt_int_mul: compute a * b, and return DT_ERR_OVERFLOW when the product
+ * would leave the range of long long. *out is not written on overflow.
+ */
 dt_status dt_int_mul(long long a, long long b, long long *out)
 {
     /* TODO: handle zero first, then LLONG_MIN with -1, then the rest. */

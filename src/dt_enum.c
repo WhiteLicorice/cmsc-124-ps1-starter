@@ -16,6 +16,11 @@
 
 static const char *const COLOR_NAMES[] = { "RED", "GREEN", "BLUE" };
 
+/*
+ * dt_enum_is_valid: true when the ordinal is one of the values in the set.
+ * C lets you store any integer in an enum. This function refuses the integers
+ * the set does not contain.
+ */
 bool dt_enum_is_valid(int ordinal)
 {
     /* TODO: true when the ordinal is at least 0 and less than DT_COLOR_COUNT.
@@ -25,6 +30,10 @@ bool dt_enum_is_valid(int ordinal)
     return false;
 }
 
+/*
+ * dt_enum_name: write the name of the ordinal's value to *out. Returns
+ * DT_ERR_RANGE when the ordinal is outside the set, and leaves *out alone then.
+ */
 dt_status dt_enum_name(int ordinal, const char **out)
 {
     /* TODO: return DT_ERR_RANGE when the ordinal is outside the set, and the
@@ -35,6 +44,11 @@ dt_status dt_enum_name(int ordinal, const char **out)
     return DT_ERR_RANGE;
 }
 
+/*
+ * dt_enum_from_name: find the name in the set and write its ordinal to *out.
+ * Returns DT_ERR_RANGE when no value has that name. A name is not a number, so
+ * there is no numeric fallback here.
+ */
 dt_status dt_enum_from_name(const char *name, int *out)
 {
     /* TODO: search COLOR_NAMES and return DT_ERR_RANGE when nothing matches.

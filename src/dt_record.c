@@ -27,6 +27,12 @@ struct dt_record {
     size_t   count;
 };
 
+/*
+ * dt_record_new: build a record with the given field names, in the order they
+ * are listed, and every field set to nil. Each name is copied. Returns NULL
+ * when there are more than DT_RECORD_MAX_FIELDS fields, or when an allocation
+ * fails.
+ */
 dt_record *dt_record_new(const char **field_names, size_t field_count)
 {
     /* TODO: return NULL for more than DT_RECORD_MAX_FIELDS, copy each name,
@@ -36,18 +42,31 @@ dt_record *dt_record_new(const char **field_names, size_t field_count)
     return NULL;
 }
 
+/*
+ * dt_record_free: free the copied names, then the record. Accepts NULL and does
+ * nothing then. The field values belong to the environment and are not freed.
+ */
 void dt_record_free(dt_record *r)
 {
     /* TODO: free the copied names, then the record. */
     (void)r;
 }
 
+/*
+ * dt_record_field_count: how many fields the record has. This reads a field, so
+ * it takes the same time no matter how many fields there are.
+ */
 size_t dt_record_field_count(const dt_record *r)
 {
     (void)r;
     return 0;
 }
 
+/*
+ * dt_record_field_name: write the name at position `index` in declaration order
+ * to *out. Returns DT_ERR_RANGE when the index is past the end, and leaves
+ * *out alone then. This is the order the record prints in.
+ */
 dt_status dt_record_field_name(const dt_record *r, size_t index, const char **out)
 {
     /* TODO: return names in declaration order, or DT_ERR_RANGE past the end.
@@ -58,6 +77,10 @@ dt_status dt_record_field_name(const dt_record *r, size_t index, const char **ou
     return DT_ERR_RANGE;
 }
 
+/*
+ * dt_record_get: write the value of the field named `field` to *out. Returns
+ * DT_ERR_FIELD when the record has no such field, and leaves *out alone then.
+ */
 dt_status dt_record_get(const dt_record *r, const char *field, dt_value *out)
 {
     /* TODO: find the index for `field`, or DT_ERR_FIELD when there is none. */
@@ -67,6 +90,11 @@ dt_status dt_record_get(const dt_record *r, const char *field, dt_value *out)
     return DT_ERR_FIELD;
 }
 
+/*
+ * dt_record_set: replace the value of the field named `field` with v. Returns
+ * DT_ERR_FIELD when the record has no such field, and changes nothing then. A
+ * record never grows a field it was not built with.
+ */
 dt_status dt_record_set(dt_record *r, const char *field, dt_value v)
 {
     /* TODO: same lookup, then the write. Never add a new field. */

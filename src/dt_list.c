@@ -31,12 +31,20 @@ struct dt_list {
     dt_list *tail;
 };
 
+/*
+ * dt_list_nil: the empty list. It is a null pointer, so it costs no memory and
+ * needs no allocation.
+ */
 dt_list *dt_list_nil(void)
 {
     /* TODO: the empty list. Read the note above before you allocate anything. */
     return NULL;
 }
 
+/*
+ * dt_list_cons: build a new cell holding `head` and pointing at `tail`. The
+ * tail is shared, never copied. Returns NULL when an allocation fails.
+ */
 dt_list *dt_list_cons(dt_value head, dt_list *tail)
 {
     /* TODO: one new cell pointing at the tail you were given. Do not copy the
@@ -46,12 +54,21 @@ dt_list *dt_list_cons(dt_value head, dt_list *tail)
     return NULL;
 }
 
+/*
+ * dt_list_free: release this one cell, never its tail. Other lists may still
+ * reach the tail, so following it would free cells they still use. Accepts
+ * NULL and does nothing then.
+ */
 void dt_list_free(dt_list *l)
 {
     /* TODO: free this one cell. Not its tail. Accept NULL without crashing. */
     (void)l;
 }
 
+/*
+ * dt_list_len: how many cells are in the list. This walks cell to cell, so it
+ * costs one step per cell. That is the price of the representation.
+ */
 size_t dt_list_len(const dt_list *l)
 {
     /* TODO: walk to the end. This costs one step per cell, which is the price
@@ -60,6 +77,11 @@ size_t dt_list_len(const dt_list *l)
     return 0;
 }
 
+/*
+ * dt_list_car: write the first cell's value to *out. Returns DT_ERR_EMPTY on
+ * the empty list, and leaves *out alone then. The empty list has no first
+ * element, and nil is a different answer from no answer.
+ */
 dt_status dt_list_car(const dt_list *l, dt_value *out)
 {
     /* TODO: DT_ERR_EMPTY on the empty list. The empty list has no first
@@ -69,6 +91,11 @@ dt_status dt_list_car(const dt_list *l, dt_value *out)
     return DT_ERR_EMPTY;
 }
 
+/*
+ * dt_list_cdr: write the tail of the list to *out. Returns DT_ERR_EMPTY on the
+ * empty list. The cdr of a one-element list is the empty list, which is a real
+ * answer, not an error.
+ */
 dt_status dt_list_cdr(const dt_list *l, dt_list **out)
 {
     /* TODO: DT_ERR_EMPTY on the empty list, and the shared tail otherwise. The

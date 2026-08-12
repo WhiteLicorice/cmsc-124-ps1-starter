@@ -25,6 +25,11 @@ struct dt_array {
     long long lower_bound;
 };
 
+/*
+ * dt_array_new: build an array of `length` elements, every one set to nil, and
+ * indices starting at `lower_bound`. A length of 0 is legal and is not a
+ * failure. Returns NULL only when an allocation fails.
+ */
 dt_array *dt_array_new(size_t length, long long lower_bound)
 {
     /* TODO: allocate the descriptor and `length` elements, set every element
@@ -35,6 +40,11 @@ dt_array *dt_array_new(size_t length, long long lower_bound)
     return NULL;
 }
 
+/*
+ * dt_array_free: release the elements and the descriptor. Accepts NULL and does
+ * nothing then. The values inside the array are not freed. The environment owns
+ * those.
+ */
 void dt_array_free(dt_array *a)
 {
     /* TODO: free the elements, then the descriptor. Do not free the values
@@ -42,18 +52,31 @@ void dt_array_free(dt_array *a)
     (void)a;
 }
 
+/*
+ * dt_array_len: how many elements the array holds. This reads a field, so it
+ * takes the same time no matter how long the array is.
+ */
 size_t dt_array_len(const dt_array *a)
 {
     (void)a;
     return 0;
 }
 
+/*
+ * dt_array_lower_bound: the index the array's indices start from. A lower
+ * bound of 1 means element 0 sits at storage offset 0 but is called index 1.
+ */
 long long dt_array_lower_bound(const dt_array *a)
 {
     (void)a;
     return 0;
 }
 
+/*
+ * dt_array_get: write the element at `index` to *out. Returns DT_ERR_RANGE when
+ * the index is below the lower bound or past the upper end, and leaves *out
+ * alone then.
+ */
 dt_status dt_array_get(const dt_array *a, long long index, dt_value *out)
 {
     /* TODO: reject index < lower_bound and index >= lower_bound + length, then
@@ -65,6 +88,11 @@ dt_status dt_array_get(const dt_array *a, long long index, dt_value *out)
     return DT_ERR_RANGE;
 }
 
+/*
+ * dt_array_set: replace the element at `index` with v. Returns DT_ERR_RANGE
+ * when the index is outside the array, and changes nothing then. The old value
+ * is not freed, for the same ownership reason as dt_array_free.
+ */
 dt_status dt_array_set(dt_array *a, long long index, dt_value v)
 {
     /* TODO: same check, then the write. Write the check once as a helper and
