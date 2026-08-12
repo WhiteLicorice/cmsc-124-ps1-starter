@@ -43,22 +43,28 @@ A fresh clone builds without warnings and then fails 30 of the 60 checks.
 Look at the 30 that pass before you take any encouragement from them. Most are
 cases that expect a refusal, which a stub that refuses everything satisfies by
 accident. `boundary/array_index_above_upper` wants exit 70, and `dt_array_get`
-returning `DT_ERR_RANGE` unconditionally is exit 70. Nothing has been built. So do not read 30/60 as halfway. Every one of
-the ten `normal/` cases fails. Those are the ones that need working code.
+returning `DT_ERR_RANGE` unconditionally is exit 70. Nothing has been built. So
+do not read 30/60 as halfway. Every one of the ten `normal/` cases fails. Those
+are the ones that need working code.
+
+The Actions badge on this repository is red for the same reason. It stays red
+until somebody implements the ten modules, which is the correct state for a
+starter. Yours goes green when you finish.
 
 ## Tested Toolchains
 
-Recorded from runs that happened on this hardware.
+Every row below is a run that happened.
 
 | Environment | Versions | Result |
 |---|---|---|
 | MSYS2 UCRT64 (Windows 11) | GCC 16.2.0, CMake 4.4.2, Ninja 1.13.2, Python 3.14.7 | builds warning-free; 60/60 with a complete implementation; sanitizers skipped, see below |
 | Ubuntu 24.04 under WSL 2 | GCC 13.3.0, Python 3.12.3 | 60/60 with a complete implementation, including under AddressSanitizer and UndefinedBehaviorSanitizer |
+| GitHub Actions, `ubuntu-latest` | the workflow in `.github/workflows/test.yml` | builds, fetches the harness, runs the corpus, and runs it again sanitized; 30/60 on the stubs, matching both machines above |
 
 The Ubuntu figure comes from compiling `src/*.c` directly with `gcc`, because
-that machine had no CMake installed. The CMake path itself was exercised on
-Windows. macOS and GitHub Actions were never run here. Their setup steps come
-from the Laboratory Activity 0 manual, where they are the same commands.
+that machine had no CMake installed. The CMake path runs on Windows and in
+Actions. macOS was never run here. Its setup steps come from the Laboratory
+Activity 0 manual, where they are the same commands.
 
 ## The Sanitizer Leg
 
@@ -69,9 +75,10 @@ sanitizers when it can.
 MinGW GCC ships neither `libasan` nor `libubsan`, so on MSYS2 the link fails
 with `cannot find -lasan` and the leg is skipped by name. This is a property of
 the toolchain, confirmed on UCRT64 GCC 16.2.0 and on mingw32 GCC 16.1.0, and
-not something your code can change. It runs on Linux, on macOS, and in the
-GitHub Actions workflow, which is where the graded verdict comes from. Push
-your work and read the Actions tab if you want the sanitized answer on Windows.
+not something your code can change. It does run in the GitHub Actions workflow,
+confirmed on `ubuntu-latest`. That workflow is where the graded verdict comes
+from, so push your work and read the Actions tab if you want the sanitized
+answer on Windows.
 
 The leg earns its place. Writing this starter, AddressSanitizer caught a leak
 in `driver.c` that all 60 correctness checks passed straight through: a
