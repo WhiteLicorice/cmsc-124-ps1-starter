@@ -44,7 +44,10 @@ struct dt_ref {
 dt_ref *dt_ref_new(dt_value v)
 {
     /* TODO: allocate the handle and a cell, copy v into the cell, and start
-       out not released. */
+       out not released.
+       dt_ref_new(dt_value_int(42))  -> a reference that prints as ref(42)
+       an allocation failure          -> NULL
+       cases/ownership/ref_released.case */
     (void)v;
     return NULL;
 }
@@ -57,7 +60,12 @@ dt_ref *dt_ref_new(dt_value v)
 dt_status dt_ref_borrow(const dt_ref *p, dt_value *out)
 {
     /* TODO: DT_ERR_RELEASED after release, and a copy of the cell otherwise.
-       Check the flag before you touch the cell pointer. */
+       Check the flag before you touch the cell pointer.
+       a live reference to 42:  dt_ref_borrow(p, &out) -> DT_OK, *out is 42
+       after dt_ref_release(p): dt_ref_borrow(p, &out) -> DT_ERR_RELEASED,
+                                                          *out untouched
+       cases/ownership/ref_released.case,
+       cases/post-release/borrow_after_release.case */
     (void)p;
     (void)out;
     return DT_ERR_RELEASED;
@@ -72,7 +80,14 @@ dt_status dt_ref_release(dt_ref *p)
     /* TODO: DT_ERR_RELEASED when it is already released. Otherwise free the
        cell, set the pointer to NULL, and set the flag. Setting the pointer to
        NULL after freeing turns a later mistake into a clean crash rather than a
-       silent read of freed memory. */
+       silent read of freed memory.
+       first call on a live reference   -> DT_OK, the cell is freed
+       second call on the same one      -> DT_ERR_RELEASED, and nothing is freed
+                                           twice
+       a reference holding a string     -> the cell goes, the string stays, since
+                                           the environment owns it
+       cases/ownership/ref_double_release.case,
+       cases/ownership/ref_aliases_string.case */
     (void)p;
     return DT_ERR_RELEASED;
 }
@@ -83,6 +98,12 @@ dt_status dt_ref_release(dt_ref *p)
  */
 bool dt_ref_is_released(const dt_ref *p)
 {
+    /* TODO: read the flag dt_ref_release sets. The driver's leak sweep calls
+       this on every reference at exit, so a hard-coded true hides every leak and
+       a hard-coded false reports leaks that were properly released.
+       a live reference        -> false, and the sweep reports DT_ERR_LEAK for it
+       after dt_ref_release(p) -> true, and the sweep leaves it alone
+       cases/ownership/ref_never_released.case, cases/ownership/ref_released.case */
     (void)p;
     return true;
 }
@@ -96,6 +117,9 @@ void dt_ref_destroy(dt_ref *p)
 {
     /* TODO: free the cell if it is still there, then the handle. The driver
        calls this at exit, after it has already reported any leak, so this
-       function reports nothing. */
+       function reports nothing.
+       a released reference  -> only the handle is left to free
+       a live reference      -> the cell and the handle both go, quietly
+       dt_ref_destroy(NULL)  -> returns, having done nothing */
     (void)p;
 }

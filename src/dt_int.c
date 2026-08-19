@@ -32,7 +32,10 @@
  */
 dt_status dt_int_add(long long a, long long b, long long *out)
 {
-    /* TODO: check for overflow, then write the sum to *out. */
+    /* TODO: check for overflow, then write the sum to *out.
+       dt_int_add(2, 3, &out)          -> DT_OK, out = 5
+       dt_int_add(LLONG_MAX, 1, &out)  -> DT_ERR_OVERFLOW, out untouched
+       cases/normal/int_arithmetic.case, cases/boundary/int_overflow_add.case */
     (void)a;
     (void)b;
     (void)out;
@@ -47,7 +50,10 @@ dt_status dt_int_sub(long long a, long long b, long long *out)
 {
     /* TODO: subtraction is not addition of a negation. -LLONG_MIN does not
        exist, so dt_int_add(a, -b, out) gives the wrong answer when b is
-       LLONG_MIN. */
+       LLONG_MIN.
+       dt_int_sub(10, 4, &out)                 -> DT_OK, out = 6
+       dt_int_sub(LLONG_MIN + 1, 2, &out)      -> DT_ERR_OVERFLOW, out untouched
+       cases/normal/int_arithmetic.case, cases/boundary/int_overflow_sub_min.case */
     (void)a;
     (void)b;
     (void)out;
@@ -60,7 +66,12 @@ dt_status dt_int_sub(long long a, long long b, long long *out)
  */
 dt_status dt_int_mul(long long a, long long b, long long *out)
 {
-    /* TODO: handle zero first, then LLONG_MIN with -1, then the rest. */
+    /* TODO: handle zero first, then LLONG_MIN with -1, then the rest.
+       dt_int_mul(6, 7, &out)            -> DT_OK, out = 42
+       dt_int_mul(LLONG_MIN, 0, &out)    -> DT_OK, out = 0
+       dt_int_mul(LLONG_MIN, -1, &out)   -> DT_ERR_OVERFLOW, out untouched
+       cases/normal/int_arithmetic.case,
+       cases/boundary/int_mul_min_by_negative_one.case */
     (void)a;
     (void)b;
     (void)out;
