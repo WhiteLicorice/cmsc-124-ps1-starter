@@ -24,7 +24,7 @@ build.sh  run  check.sh   the course run contract
 ./check.sh          # build, then the whole published corpus, then sanitizers
 ```
 
-`check.sh` is the whole grade. There is no second script.
+`check.sh` is the whole grade. There's no second script.
 
 ## Exit Codes
 
@@ -44,7 +44,7 @@ Look at the 30 that pass before you take any encouragement from them. Most are
 cases that expect a refusal, which a stub that refuses everything satisfies by
 accident. `boundary/array_index_above_upper` wants exit 70, and `dt_array_get`
 returning `DT_ERR_RANGE` unconditionally is exit 70. Nothing has been built. So
-do not read 30/60 as halfway. Every one of the ten `normal/` cases fails. Those
+don't read 30/60 as halfway. Every one of the ten `normal/` cases fails. Those
 are the ones that need working code.
 
 The Actions badge on this repository is red for the same reason. It stays red
