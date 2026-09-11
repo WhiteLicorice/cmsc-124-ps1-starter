@@ -19,7 +19,7 @@ const char *dt_status_message(dt_status status)
     case DT_ERR_FIELD:     return "No such field.";
     case DT_ERR_TAG:       return "Value holds a different alternative.";
     case DT_ERR_EMPTY:     return "Empty list has no car or cdr.";
-    case DT_ERR_CAPACITY:  return "Too many parts for this structure.";
+    case DT_ERR_CAPACITY:  return "Requested capacity is not available.";
     case DT_ERR_RELEASED:  return "Reference was already released.";
     case DT_ERR_LEAK:      return "Reference was never released.";
     }

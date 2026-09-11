@@ -5,9 +5,8 @@
  * is nothing to learn from retyping them.
  *
  * The three readers at the bottom are yours. Each one checks the tag before it
- * reads the payload. That check is the difference between a free union, which
- * will happily read the bits of a pointer as an integer, and a discriminated
- * union, which will not.
+ * reads the payload. C permits code to read a different union member. Pairing
+ * the union with a tag lets this interface refuse that operation first.
  *
  * They refuse every read until you write them, so every `as` command in the
  * corpus fails with exit 70.

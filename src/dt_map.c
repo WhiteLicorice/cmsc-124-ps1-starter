@@ -1,17 +1,18 @@
 /*
  * dt_map.c -- associative arrays (Unit 5, Section E).
  *
- * The difference from an array is one sentence. An array does not store its
- * indices. This stores its keys. That is why an array position costs one
- * subtraction and a key costs a hash plus at least one comparison.
+ * The selector difference this assignment exposes fits in one sentence. An
+ * array does not store its indices. This map stores its keys. An array position costs one
+ * subtraction. A key costs a hash followed by comparisons in one bucket. An
+ * empty bucket needs no comparison.
  *
  * Two requirements drive the code.
  *
  * Hashing. Turn the key into a bucket number, then compare keys inside that
  * bucket, because two keys can land in the same bucket. Making each bucket a
  * linked list is the shortest correct answer. FNV-1a is four lines. Start the
- * accumulator at 14695981039346656037, then for each byte, exclusive-or the
- * byte into it and multiply by 1099511628211.
+ * unsigned accumulator at 14695981039346656037ULL. For each unsigned byte,
+ * exclusive-or the byte into it and multiply by 1099511628211ULL.
  *
  * Insertion order. Printing a map has to be repeatable, or nobody can write an
  * expected-output file. Bucket order depends on the hash function, so keep a

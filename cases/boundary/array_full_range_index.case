@@ -1,0 +1,3 @@
+# An invalid index must not overflow while the array computes its offset.
+arr new a 1 -9223372036854775808
+arr get a 9223372036854775807

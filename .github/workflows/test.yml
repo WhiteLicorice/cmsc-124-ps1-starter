@@ -21,8 +21,7 @@ jobs:
 
       - run: chmod +x build.sh run check.sh
 
-      # check.sh is the whole grade. It builds, runs the published corpus, and
-      # runs it again under AddressSanitizer and UndefinedBehaviorSanitizer,
-      # which do link on both of these runners even though they do not on
-      # MSYS2.
+      # check.sh is the complete public automated check. It builds, runs the
+      # published corpus, and repeats it with AddressSanitizer and
+      # UndefinedBehaviorSanitizer. Both sanitizers link on these runners.
       - run: ./check.sh

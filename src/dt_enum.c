@@ -1,10 +1,10 @@
 /*
  * dt_enum.c -- enumerations (Unit 5, Section C).
  *
- * A C enum is an integer with nicer names. Nothing stops you from storing 47
- * in a dt_color, and nothing catches it later. Languages that treat
- * enumerations as their own type, such as Ada, Java, and Rust, keep the value
- * inside the set and refuse to convert it to an integer.
+ * A C enumeration type is compatible with an integer type and uses named
+ * enumerators. A dt_color can still hold 47. This module instead accepts only
+ * the three declared color ordinals. Other languages place different
+ * restrictions on creating enumeration values from arbitrary integers.
  *
  * You cannot change what C does. You can put the check in the one place every
  * read passes through, which is what these three functions are.

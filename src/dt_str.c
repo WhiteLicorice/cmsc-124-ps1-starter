@@ -1,16 +1,16 @@
 /*
  * dt_str.c -- strings that carry their length (Unit 5, Section B).
  *
- * A C string is a pointer to bytes that ends at the first zero byte. Finding the
- * length therefore means walking the whole string, a string cannot contain a
- * zero byte, and the string does not know how much memory it has, so appending
- * safely needs information it does not store.
+ * A C string is a null-terminated character sequence stored in an array. An
+ * expression that names that array usually converts to a pointer to its first
+ * character. Finding the length with strlen walks to the first zero byte, and
+ * the pointer alone does not record the array's capacity.
  *
  * Yours keeps the length and the capacity next to the bytes. dt_str_len reads
  * a field. A zero byte is an ordinary byte. Appending knows when to grow.
  *
- * You may write a terminating zero after the last byte if you like. The
- * printer never depends on it, but it makes debugging easier.
+ * You may store a terminating zero after the last data byte. The public
+ * interface does not promise one, so callers must use dt_str_len.
  */
 
 #include "dt.h"
@@ -69,8 +69,8 @@ size_t dt_str_len(const dt_str *s)
 }
 
 /*
- * dt_str_bytes: the string's bytes. There is no terminating zero, so pair this
- * with dt_str_len rather than treating it as a C string.
+ * dt_str_bytes: the string's bytes. Internal storage may include a terminating
+ * zero, but callers must pair this pointer with dt_str_len.
  */
 const char *dt_str_bytes(const dt_str *s)
 {

@@ -4,24 +4,19 @@
  * Three failures live here, and C reports none of them.
  *
  * A dangling reference. The memory is freed and the pointer still holds its
- * address. Reading through it reads memory the allocator has taken back. It
- * often appears to work, which is the danger. It keeps working until the
- * allocator gives that memory to something else, and then the read returns
- * another variable's data.
+ * address. Reading through it has undefined behavior. The program can appear
+ * to work, return unrelated data, or terminate.
  *
- * A double release. The same memory is freed twice. Most allocators treat this
- * as damage to their own records, so the crash usually happens later, during
- * some unrelated allocation.
+ * A double release. The same memory is freed twice. This also has undefined
+ * behavior, so the failure can appear at the release or later.
  *
- * A lost pointee. The reference goes away while the memory is still
- * allocated, so nothing in the program can reach that memory to free it. This
- * is the opposite of a dangling reference. There you can reach memory you no
- * longer own. Here you own memory you cannot reach.
+ * An unreleased allocation. The handle still owns its cell when the program
+ * reaches the driver's final check. The driver reports DT_ERR_LEAK before it
+ * destroys the handle and cell during cleanup.
  *
- * A released flag turns the first two into DT_ERR_RELEASED. The sweep the driver
- * runs at exit turns the third into DT_ERR_LEAK. That flag, plus the check in
- * front of every read, is close to what a reference-counted or garbage
- * collected language does for you, and close to what it costs.
+ * A released flag lets this small interface report the first two mistakes as
+ * DT_ERR_RELEASED. The driver's final check reports the third as DT_ERR_LEAK.
+ * These checks model this assignment's ownership contract only.
  *
  * Ownership stops at the cell. dt_ref_new copies the value into a cell that
  * the reference owns. If the value points at a string, the string still
@@ -79,8 +74,8 @@ dt_status dt_ref_release(dt_ref *p)
 {
     /* TODO: DT_ERR_RELEASED when it is already released. Otherwise free the
        cell, set the pointer to NULL, and set the flag. Setting the pointer to
-       NULL after freeing turns a later mistake into a clean crash rather than a
-       silent read of freed memory.
+       NULL after freeing removes the stale cell address. The released flag must
+       still prevent every later access.
        first call on a live reference   -> DT_OK, the cell is freed
        second call on the same one      -> DT_ERR_RELEASED, and nothing is freed
                                            twice

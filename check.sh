@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# check.sh -- the whole grade, run the same way by you, by CI, and by me.
+# check.sh -- the complete public automated check, run by you, CI, and me.
 #
 # There is no second script with extra tests in it. What this runs is what
 # cases/ contains, and cases/ is in the repository you were handed.
@@ -41,9 +41,9 @@ fi
 
 banner "sanitizers"
 # AddressSanitizer and UndefinedBehaviorSanitizer catch the memory faults the
-# correctness run cannot see: a read past the end of an array that happens to
-# land inside the allocation, a use of freed memory that happens to still hold
-# the old bytes. Both are real failures that pass a stdout comparison.
+# correctness run cannot see. Examples include a read past an allocation and a
+# use of freed memory that happens to retain the old bytes. Both can pass a
+# comparison of standard output.
 #
 # MinGW GCC does not ship libasan or libubsan, so on MSYS2 this leg cannot run
 # at all. That is a property of the toolchain, not of your code. It runs on
@@ -72,10 +72,9 @@ if command -v "$probe_cc" >/dev/null 2>&1 &&
     # test, so a leak or an overflow shows up by name rather than as a note
     # nobody reads.
     #
-    # Leak detection is left at its default instead of being forced on. It is
-    # already on under Linux, and Apple's AddressSanitizer has no leak checker
-    # at all, so asking for one there fails the run before a test executes.
-    export ASAN_OPTIONS="abort_on_error=0"
+    # Enable leak detection explicitly on Linux and macOS. A sanitizer abort is
+    # still a failed case, but the harness continues with the remaining cases.
+    export ASAN_OPTIONS="detect_leaks=1:abort_on_error=0"
     export UBSAN_OPTIONS="print_stacktrace=1:halt_on_error=1"
     if ! DT_BUILD_DIR=./build-san "$PYTHON" run_tests.py cases; then
       failures=1

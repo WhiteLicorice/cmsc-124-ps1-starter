@@ -24,7 +24,9 @@ build.sh  run  check.sh   the course run contract
 ./check.sh          # build, then the whole published corpus, then sanitizers
 ```
 
-`check.sh` is the whole grade. There's no second script.
+`check.sh` is the complete public automated check. There's no hidden test
+script. The rubric separately assesses analysis, collaboration history, and
+memory evidence.
 
 ## Exit Codes
 
@@ -38,13 +40,13 @@ The course contract, the same one the laboratory interpreter uses.
 
 ## Reading a First Run
 
-A fresh clone builds without warnings and then fails 30 of the 60 checks.
+A fresh clone builds without warnings, passes 33 of 63 checks, and exits 1.
 
-Look at the 30 that pass before you take any encouragement from them. Most are
+Look at the 33 that pass before you take any encouragement from them. Most are
 cases that expect a refusal, which a stub that refuses everything satisfies by
 accident. `boundary/array_index_above_upper` wants exit 70, and `dt_array_get`
 returning `DT_ERR_RANGE` unconditionally is exit 70. Nothing has been built. So
-don't read 30/60 as halfway. Every one of the ten `normal/` cases fails. Those
+don't read 33/63 as halfway. Every one of the ten `normal/` cases fails. Those
 are the ones that need working code.
 
 The Actions badge on this repository is red for the same reason. It stays red
@@ -57,14 +59,14 @@ Every row below is a run that happened.
 
 | Environment | Versions | Result |
 |---|---|---|
-| MSYS2 UCRT64 (Windows 11) | GCC 16.2.0, CMake 4.4.2, Ninja 1.13.2, Python 3.14.7 | builds warning-free; 60/60 with a complete implementation; sanitizers skipped, see below |
-| Ubuntu 24.04 under WSL 2 | GCC 13.3.0, Python 3.12.3 | 60/60 with a complete implementation, including under AddressSanitizer and UndefinedBehaviorSanitizer |
-| GitHub Actions, `ubuntu-latest` | the workflow in `.github/workflows/test.yml` | builds, fetches the harness, runs the corpus, and runs it again sanitized; 30/60 on the stubs, matching both machines above |
-| GitHub Actions, `macos-latest` | the same workflow, Apple Clang | the same four stages and the same 30/60 |
+| MSYS2 UCRT64 (Windows 11) | GCC 16.2.0, CMake 4.4.2, Ninja 1.13.2, Python 3.14.7 | builds warning-free; 63/63 with a complete implementation; sanitizers skipped, see below |
+| Ubuntu 24.04 under WSL 2 | GCC 13.3.0, Python 3.12.3 | the earlier 60-case corpus passed with a complete implementation and both sanitizers |
+| GitHub Actions, `ubuntu-latest` | the workflow in `.github/workflows/test.yml` | the earlier 60-case scaffold completed all four stages and produced the expected starter result |
+| GitHub Actions, `macos-latest` | the same workflow, Apple Clang | the earlier 60-case scaffold completed the same four stages and produced the expected starter result |
 
-The Ubuntu figure comes from compiling `src/*.c` directly with `gcc`, because
-that machine had no CMake installed. Everywhere else went through CMake. The
-60/60 figures are from the instructor's own implementation on the two local
+That Ubuntu machine had no CMake installed, so its run compiled `src/*.c`
+directly with `gcc`. Everywhere else went through CMake. The
+complete figures are from the instructor's own implementation on the two local
 machines, so what the two Actions runners prove is the scaffold: the build, the
 harness fetch, the corpus, and the sanitizers.
 
@@ -75,19 +77,18 @@ harness fetch, the corpus, and the sanitizers.
 sanitizers when it can.
 
 MinGW GCC ships neither `libasan` nor `libubsan`, so on MSYS2 the link fails
-with `cannot find -lasan` and the leg is skipped by name. This is a property of
+with `cannot find -lasan`, and the script reports an explicit skip. This is a property of
 the toolchain, confirmed on UCRT64 GCC 16.2.0 and on mingw32 GCC 16.1.0, and
 not something your code can change. It does run in the GitHub Actions workflow,
 confirmed on both `ubuntu-latest` and `macos-latest`. That workflow is where the
 graded verdict comes from, so push your work and read the Actions tab if you
 want the sanitized answer on Windows.
 
-Apple's AddressSanitizer has no leak checker, so `check.sh` leaves leak
-detection at whatever the platform defaults to. Linux turns it on by itself,
-which is where the leak half of the grade is decided.
+`check.sh` sets `detect_leaks=1` on both Linux and macOS. Each workflow job
+therefore checks for leaks explicitly.
 
 The leg earns its place. Writing this starter, AddressSanitizer caught a leak
-in `driver.c` that all 60 correctness checks passed straight through: a
+in `driver.c` that every correctness check passed straight through: a
 malformed quoted string made `scan_line` abandon the tokens it had already
 allocated for that line. Nothing about the output was wrong. The bug was
 invisible to a comparison of stdout, which is the category of mistake the

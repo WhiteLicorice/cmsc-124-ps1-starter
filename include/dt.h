@@ -14,10 +14,10 @@
  *    failure with a special return value. There is no integer dt_int_add could
  *    return that would not also be a correct answer.
  *
- * 2. Containers do not own the values inside them. The driver's environment
- *    owns every named object and frees it at exit. dt_array_free releases the
- *    array's own memory and nothing else. That keeps ownership out of nine
- *    modules so that the tenth, dt_ref, can be about ownership alone.
+ * 2. Each module owns its representation storage, such as an array's element
+ *    block. Containers borrow any objects named by their dt_value elements.
+ *    The driver owns those runtime objects and frees them at exit. This keeps
+ *    object ownership out of nine modules so dt_ref can isolate the topic.
  */
 
 #ifndef DT_H
@@ -44,7 +44,7 @@ typedef enum {
     DT_ERR_FIELD,     /* a record has no field with that name */
     DT_ERR_TAG,       /* a value was read as the wrong alternative */
     DT_ERR_EMPTY,     /* car or cdr was taken of the empty list */
-    DT_ERR_CAPACITY,  /* a fixed-size structure was given too many parts */
+    DT_ERR_CAPACITY,  /* a requested allocation or representation is unavailable */
     DT_ERR_RELEASED,  /* a reference was read or released after release */
     DT_ERR_LEAK       /* a reference was still holding memory when the program ended */
 } dt_status;
@@ -141,7 +141,7 @@ dt_status dt_int_mul(long long a, long long b, long long *out);
 dt_str   *dt_str_new(const char *bytes, size_t length);
 void      dt_str_free(dt_str *s);
 size_t    dt_str_len(const dt_str *s);
-const char *dt_str_bytes(const dt_str *s); /* no terminator, so pair it with len */
+const char *dt_str_bytes(const dt_str *s); /* use len, even if storage has a terminator */
 dt_status dt_str_append(dt_str *s, const char *bytes, size_t length);
 dt_status dt_str_substr(const dt_str *s, size_t start, size_t length, dt_str **out);
 bool      dt_str_eq(const dt_str *a, const dt_str *b);
@@ -166,9 +166,9 @@ dt_status dt_enum_from_name(const char *name, int *out);
 /* --------------------------------------------------------------- arrays */
 
 /*
- * An array descriptor: the elements, plus the lower bound its indices start
- * from. A lower bound of 1 is allowed, so every access needs the subtraction
- * instead of using the index as the offset.
+ * An array descriptor stores the elements, length, and lower bound. Every
+ * representable index in the array must fit in long long. Access computes a
+ * size_t offset without overflowing signed arithmetic.
  */
 dt_array *dt_array_new(size_t length, long long lower_bound);
 void      dt_array_free(dt_array *a);
@@ -199,9 +199,9 @@ dt_status dt_map_key_at(const dt_map *m, size_t index, const char **out);
 #define DT_RECORD_MAX_FIELDS 8
 
 /*
- * A compiled language selects record fields by name while compiling. Here the
- * lookup happens at run time, which is the same idea with the table of names
- * left visible. A name the record does not declare gives DT_ERR_FIELD, and the
+ * Many statically compiled languages resolve a declared record field to an
+ * offset while compiling. Here the lookup happens at run time, which leaves
+ * the table of names visible. An undeclared field gives DT_ERR_FIELD, and the
  * record keeps the fields it was built with.
  */
 dt_record *dt_record_new(const char **field_names, size_t field_count);
@@ -217,7 +217,8 @@ dt_status  dt_record_set(dt_record *r, const char *field, dt_value v);
 
 /*
  * A tuple selects its parts by position. It is built once from those parts and
- * read by index afterward, which is the whole difference from a record.
+ * read by index afterward. This interface exposes that distinction from its
+ * record type.
  */
 dt_tuple *dt_tuple_new(const dt_value *values, size_t count);
 void      dt_tuple_free(dt_tuple *t);
