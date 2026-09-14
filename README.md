@@ -84,8 +84,9 @@ confirmed on both `ubuntu-latest` and `macos-latest`. That workflow is where the
 graded verdict comes from, so push your work and read the Actions tab if you
 want the sanitized answer on Windows.
 
-`check.sh` sets `detect_leaks=1` on both Linux and macOS. Each workflow job
-therefore checks for leaks explicitly.
+Apple's AddressSanitizer has no leak checker, so `check.sh` leaves leak
+detection at whatever the platform defaults to. Linux turns it on by itself,
+which is where the leak half of the grade is decided.
 
 The leg earns its place. Writing this starter, AddressSanitizer caught a leak
 in `driver.c` that every correctness check passed straight through: a

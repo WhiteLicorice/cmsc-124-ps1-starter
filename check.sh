@@ -72,9 +72,10 @@ if command -v "$probe_cc" >/dev/null 2>&1 &&
     # test, so a leak or an overflow shows up by name rather than as a note
     # nobody reads.
     #
-    # Enable leak detection explicitly on Linux and macOS. A sanitizer abort is
-    # still a failed case, but the harness continues with the remaining cases.
-    export ASAN_OPTIONS="detect_leaks=1:abort_on_error=0"
+    # Leak detection is left at its default instead of being forced on. It is
+    # already on under Linux, and Apple's AddressSanitizer has no leak checker
+    # at all, so asking for one there fails the run before a test executes.
+    export ASAN_OPTIONS="abort_on_error=0"
     export UBSAN_OPTIONS="print_stacktrace=1:halt_on_error=1"
     if ! DT_BUILD_DIR=./build-san "$PYTHON" run_tests.py cases; then
       failures=1
