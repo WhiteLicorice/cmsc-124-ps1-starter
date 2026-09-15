@@ -49,9 +49,9 @@ returning `DT_ERR_RANGE` unconditionally is exit 70. Nothing has been built. So
 don't read 33/63 as halfway. Every one of the ten `normal/` cases fails. Those
 are the ones that need working code.
 
-The Actions badge on this repository is red for the same reason. It stays red
-until somebody implements the ten modules, which is the correct state for a
-starter. Yours goes green when you finish.
+The workflow run in this repository's Actions tab is red for the same reason.
+It stays red until somebody implements the ten modules. That is the correct
+state for a starter. Your fork's run goes green when you finish.
 
 ## Tested Toolchains
 
